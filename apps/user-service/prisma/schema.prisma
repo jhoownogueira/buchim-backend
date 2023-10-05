@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  AdminID  String @id
+  Username String @unique @db.VarChar(30)
+  Password String
+}
+
+model Comment {
+  CommentID String   @id
+  UserID    String
+  PostID    String
+  ImageURL  String?
+  CreatedAt DateTime @default(now())
+  Post      Post     @relation(fields: [PostID], references: [PostID])
+  User      User     @relation(fields: [UserID], references: [UserID])
+}
+
+model CreditsTransaction {
+  TransactionID   String   @id
+  UserID          String
+  Amount          Float
+  TransactionType String   @db.VarChar(255)
+  CreatedAt       DateTime @default(now())
+  User            User     @relation(fields: [UserID], references: [UserID])
+}
+
+model Like {
+  LikeID    String   @id
+  UserID    String
+  PostID    String
+  CreatedAt DateTime @default(now())
+  Post      Post     @relation(fields: [PostID], references: [PostID])
+  User      User     @relation(fields: [UserID], references: [UserID])
+}
+
+model Location {
+  LocationID   String       @id
+  Street       String
+  Number       Int
+  Neighborhood String
+  City         String
+  State        String
+  ZipCode      String
+  Country      String
+  Latitude     Float?
+  Longitude    Float?
+  Restaurant   Restaurant[]
+}
+
+model MenuItem {
+  MenuItemID   String     @id
+  RestaurantID String
+  Name         String     @db.VarChar(100)
+  Description  String     @db.VarChar(500)
+  Price        Float
+  Restaurant   Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
+}
+
+model Notification {
+  NotificationID String   @id
+  UserID         String
+  Content        String
+  CreatedAt      DateTime @default(now())
+  User           User     @relation(fields: [UserID], references: [UserID])
+}
+
+model Payment {
+  PaymentID   String   @id
+  UserID      String
+  Amount      Float
+  UsedCredits Float
+  CreatedAt   DateTime @default(now())
+  User        User     @relation(fields: [UserID], references: [UserID])
+}
+
+model Post {
+  PostID       String     @id
+  RestaurantID String
+  Content      String     @db.VarChar(200)
+  ImageURL     String
+  CreatedAt    DateTime   @default(now())
+  Comment      Comment[]
+  Like         Like[]
+  Restaurant   Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
+}
+
+model Reservation {
+  ReservationID  String     @id
+  RestaurantID   String
+  UserID         String
+  DateTime       DateTime
+  NumberOfPeople Int
+  Status         String     @db.VarChar(255)
+  Restaurant     Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
+  User           User       @relation(fields: [UserID], references: [UserID])
+}
+
+model Restaurant {
+  RestaurantID          String                  @id
+  Username              String                  @unique @db.VarChar(15)
+  Email                 String
+  Password              String
+  FullName              String                  @db.VarChar(255)
+  ProfileImageURL       String
+  LocationID            String
+  AcceptsReservations   Boolean
+  CreatedAt             DateTime                @default(now())
+  MenuItem              MenuItem[]
+  Post                  Post[]
+  Reservation           Reservation[]
+  Location              Location                @relation(fields: [LocationID], references: [LocationID])
+  Review                Review[]
+  UserFollowsRestaurant UserFollowsRestaurant[]
+  RestaurantTokens      RestaurantTokens[]
+}
+
+model RestaurantTokens {
+  RefreshTokenID String     @id @default(uuid())
+  RestaurantID   String
+  Restaurant     Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
+  RefreshToken   String
+  ExpiresIn      DateTime
+}
+
+model Review {
+  ReviewID     String     @id
+  RestaurantID String
+  UserID       String
+  Rating       Int
+  CreatedAt    DateTime   @default(now())
+  Restaurant   Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
+  User         User       @relation(fields: [UserID], references: [UserID])
+}
+
+model User {
+  UserID                String                  @id
+  Username              String                  @unique @db.VarChar(15)
+  FullName              String                  @db.VarChar(255)
+  Email                 String
+  Password              String
+  ProfileImageURL       String?
+  CreatedAt             DateTime                @default(now())
+  Comment               Comment[]
+  CreditsTransaction    CreditsTransaction[]
+  Like                  Like[]
+  Notification          Notification[]
+  Payment               Payment[]
+  Reservation           Reservation[]
+  Review                Review[]
+  UserFollowsRestaurant UserFollowsRestaurant[]
+  UserTokens            UserTokens[]
+}
+
+model UserTokens {
+  RefreshTokenID String   @id @default(uuid())
+  UserID         String
+  User           User     @relation(fields: [UserID], references: [UserID])
+  RefreshToken   String
+  ExpiresIn      DateTime
+}
+
+model UserFollowsRestaurant {
+  FollowID     String     @id
+  UserID       String
+  RestaurantID String
+  FollowedAt   DateTime   @default(now())
+  Restaurant   Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
+  User         User       @relation(fields: [UserID], references: [UserID])
+}
