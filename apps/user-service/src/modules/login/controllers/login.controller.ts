@@ -16,10 +16,16 @@ export class LoginController {
   @MessagePattern('user_signin')
   async SignInUser(signInDTO: UserSignInDTO) {
     try {
+      console.log('Microserviço: recebendo requisição de login');
       const userTokens = await this.signInService.signInUser(signInDTO);
-      return userTokens;
+      console.log('Microserviço: enviando resposta de login');
+      return {
+        success: true,
+        statusCode: 200,
+        data: userTokens,
+      };
     } catch (error) {
-      console.log('Erro no microserviço:', error.response.message);
+      console.log('Erro no microserviço:', error);
       return {
         success: false,
         error: error.response.message,

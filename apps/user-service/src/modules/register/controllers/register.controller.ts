@@ -1,13 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { RegisterService } from '../services/regiser.service';
+import { IUserRegiserDTO } from '../dtos/user.dto';
 
 @Controller()
 export class RegisterController {
   constructor(private registerService: RegisterService) {}
 
-  @MessagePattern('user_regiser')
-  async RegisterUser(data: any) {
+  @MessagePattern('user_register')
+  async RegisterUser(data: IUserRegiserDTO) {
     try {
       await this.registerService.registerNewUser(data);
       return {
@@ -16,11 +17,11 @@ export class RegisterController {
         statusCode: 201,
       };
     } catch (error) {
-      console.log('Erro no microserviço:', error.response.message);
+      console.log('Erro no microserviço:', error);
       return {
         success: false,
-        message: error.response.message,
-        statusCode: error.response.statusCode,
+        message: error.response,
+        statusCode: error.status,
       };
     }
   }

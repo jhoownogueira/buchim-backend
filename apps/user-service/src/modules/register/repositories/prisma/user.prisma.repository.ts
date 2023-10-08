@@ -1,21 +1,23 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'apps/user-service/src/infra/database/prisma.service';
 import { IUserRepository } from '../user.repository';
+import { IUserRegiserDTO } from '../../dtos/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserPrismaRepository implements IUserRepository {
   constructor(private prisma: PrismaService) {}
 
-  async registerNewUser(data: any): Promise<void> {
+  async registerNewUser(data: IUserRegiserDTO): Promise<void> {
     await this.prisma.$transaction(async () => {
       const userUsernameExists = await this.prisma.user.findUnique({
         where: {
-          Username: data.Username,
+          Username: data.username,
         },
       });
       const restaurantUsernameExists = await this.prisma.restaurant.findUnique({
         where: {
-          Username: data.Username,
+          Username: data.username,
         },
       });
       if (userUsernameExists || restaurantUsernameExists) {
@@ -24,12 +26,12 @@ export class UserPrismaRepository implements IUserRepository {
 
       const userEmailExists = await this.prisma.user.findUnique({
         where: {
-          Email: data.Email,
+          Email: data.email,
         },
       });
       const restaurantEmailExists = await this.prisma.restaurant.findUnique({
         where: {
-          Email: data.Email,
+          Email: data.email,
         },
       });
 
@@ -37,8 +39,16 @@ export class UserPrismaRepository implements IUserRepository {
         throw new HttpException('Username already exists', 409);
       }
 
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+
       await this.prisma.user.create({
-        data,
+        data: {
+          Username: data.username,
+          FullName: data.fullName,
+          Email: data.email,
+          Password: hashedPassword,
+          ProfileImageURL: data.profileImageURL,
+        },
       });
     });
   }

@@ -17,6 +17,7 @@ export class SignInService {
     private prisma: PrismaService,
   ) {}
   async signInUser(data: UserSignInDTO) {
+    console.log('Verificando usuário');
     const user = await this.prisma.user.findUnique({
       where: {
         Username: data.username,
@@ -27,6 +28,7 @@ export class SignInService {
       throw new UnauthorizedException('Usuario incorreto');
     }
 
+    console.log('Verificando senha');
     const isEqualPassword = await compare(data.password, user.Password);
 
     if (!isEqualPassword) {
@@ -40,22 +42,28 @@ export class SignInService {
       email: user.Email,
       profile_picture: user.ProfileImageURL,
     };
+    console.log('Gerando jwt');
     const token = await this.jwtService.signAsync(payload);
+    console.log('Gerando refresh token');
     const refreshToken = generateRefreshToken();
 
+    console.log('Deletando tokens antigos');
     await this.prisma.userTokens.deleteMany({
       where: {
         UserID: user.UserID,
       },
     });
 
+    console.log('Criando novo token na tabela');
     await this.prisma.userTokens.create({
       data: {
         UserID: user.UserID,
-        RefreshToken: refreshToken,
-        ExpiresIn: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        Token: refreshToken,
+        ExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
+
+    console.log('Retornando tokens');
 
     return {
       access_token: token,
@@ -99,8 +107,8 @@ export class SignInService {
     await this.prisma.restaurantTokens.create({
       data: {
         RestaurantID: restaurant.RestaurantID,
-        RefreshToken: refreshToken,
-        ExpiresIn: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        Token: refreshToken,
+        ExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
 

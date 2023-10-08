@@ -23,6 +23,21 @@ model User {
   UserFollowsRestaurant UserFollowsRestaurant[]
   Reservation           Reservation[]
   Payment               Payment[]
+  UserTokens            UserTokens[]
+}
+
+model UserTokens {
+  UserID    String   @id @map("UserID")
+  Token     String
+  ExpiresAt DateTime
+  User      User     @relation(fields: [UserID], references: [UserID])
+}
+
+model RestaurantTokens {
+  RestaurantID String     @id @map("RestaurantID")
+  Token        String
+  ExpiresAt    DateTime
+  Restaurant   Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
 }
 
 model Notification {
@@ -59,6 +74,7 @@ model Location {
 model Restaurant {
   RestaurantID          String                  @id @default(uuid()) @map("RestaurantID")
   Username              String                  @unique @db.VarChar(15)
+  Password              String
   Email                 String                  @unique
   FullName              String                  @db.VarChar(255)
   ProfileImageURL       String
@@ -71,6 +87,7 @@ model Restaurant {
   Review                Review[]
   UserFollowsRestaurant UserFollowsRestaurant[]
   Reservation           Reservation[]
+  RestaurantTokens      RestaurantTokens[]
 }
 
 model MenuItem {

@@ -12,27 +12,27 @@ export class RefreshTokenService {
   async executeUser(refreshToken: string) {
     const tokenData = await this.prisma.userTokens.findFirst({
       where: {
-        RefreshToken: refreshToken,
+        Token: refreshToken,
       },
       include: {
         User: true,
       },
     });
 
-    if (!tokenData || tokenData.ExpiresIn <= new Date()) {
-      if (tokenData && tokenData.ExpiresIn <= new Date()) {
+    if (!tokenData || tokenData.ExpiresAt <= new Date()) {
+      if (tokenData && tokenData.ExpiresAt <= new Date()) {
         const tokenId = await this.prisma.userTokens.findFirst({
           where: {
-            RefreshToken: refreshToken,
+            Token: refreshToken,
           },
           select: {
-            RefreshTokenID: true,
+            UserID: true,
           },
         });
         if (tokenId) {
           await this.prisma.userTokens.delete({
             where: {
-              RefreshTokenID: tokenId.RefreshTokenID,
+              UserID: tokenId.UserID,
             },
           });
         }
@@ -59,27 +59,27 @@ export class RefreshTokenService {
   async executeRestaurant(refreshToken: string) {
     const tokenData = await this.prisma.restaurantTokens.findFirst({
       where: {
-        RefreshToken: refreshToken,
+        Token: refreshToken,
       },
       include: {
         Restaurant: true,
       },
     });
 
-    if (!tokenData || tokenData.ExpiresIn <= new Date()) {
-      if (tokenData && tokenData.ExpiresIn <= new Date()) {
+    if (!tokenData || tokenData.ExpiresAt <= new Date()) {
+      if (tokenData && tokenData.ExpiresAt <= new Date()) {
         const tokenId = await this.prisma.restaurantTokens.findFirst({
           where: {
-            RefreshToken: refreshToken,
+            Token: refreshToken,
           },
           select: {
-            RefreshTokenID: true,
+            RestaurantID: true,
           },
         });
         if (tokenId) {
-          await this.prisma.userTokens.delete({
+          await this.prisma.restaurantTokens.delete({
             where: {
-              RefreshTokenID: tokenId.RefreshTokenID,
+              RestaurantID: tokenId.RestaurantID,
             },
           });
         }

@@ -27,10 +27,12 @@ export class GatewayLoginController {
   @Post('/user')
   @HttpCode(200)
   async SignInUser(@Body() signInDTO: UserSignInDTO) {
+    console.log('Gateway: recebendo requisição de login');
     const response = await firstValueFrom(
       this.client.send('user_signin', signInDTO),
     );
     if (!response.success) {
+      console.log(response);
       console.log('Erro capturado no gateway:', response.error);
       throw new HttpException(response.error, response.statusCode);
     }
