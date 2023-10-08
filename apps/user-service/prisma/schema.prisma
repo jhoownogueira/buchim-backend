@@ -106,28 +106,18 @@ model Reservation {
 model Restaurant {
   RestaurantID          String                  @id
   Username              String                  @unique @db.VarChar(15)
-  Email                 String
-  Password              String
   FullName              String                  @db.VarChar(255)
   ProfileImageURL       String
   LocationID            String
   AcceptsReservations   Boolean
   CreatedAt             DateTime                @default(now())
+  Email                 String                  @unique
   MenuItem              MenuItem[]
   Post                  Post[]
   Reservation           Reservation[]
   Location              Location                @relation(fields: [LocationID], references: [LocationID])
   Review                Review[]
   UserFollowsRestaurant UserFollowsRestaurant[]
-  RestaurantTokens      RestaurantTokens[]
-}
-
-model RestaurantTokens {
-  RefreshTokenID String     @id @default(uuid())
-  RestaurantID   String
-  Restaurant     Restaurant @relation(fields: [RestaurantID], references: [RestaurantID])
-  RefreshToken   String
-  ExpiresIn      DateTime
 }
 
 model Review {
@@ -144,7 +134,7 @@ model User {
   UserID                String                  @id
   Username              String                  @unique @db.VarChar(15)
   FullName              String                  @db.VarChar(255)
-  Email                 String
+  Email                 String                  @unique
   Password              String
   ProfileImageURL       String?
   CreatedAt             DateTime                @default(now())
@@ -156,15 +146,6 @@ model User {
   Reservation           Reservation[]
   Review                Review[]
   UserFollowsRestaurant UserFollowsRestaurant[]
-  UserTokens            UserTokens[]
-}
-
-model UserTokens {
-  RefreshTokenID String   @id @default(uuid())
-  UserID         String
-  User           User     @relation(fields: [UserID], references: [UserID])
-  RefreshToken   String
-  ExpiresIn      DateTime
 }
 
 model UserFollowsRestaurant {
