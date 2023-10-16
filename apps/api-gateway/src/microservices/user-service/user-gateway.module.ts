@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { GatewayLoginController } from './microservices/user-service/gateway/gateway-login.controller';
-import { GatewayRegisterController } from './microservices/user-service/gateway/gateway-register.controller';
-import { UploadProfilePhotoService } from './microservices/user-service/services/upload-profile-photo.service';
+import { GatewayLoginController } from './gateway/gateway-login.controller';
+import { GatewayRegisterController } from './gateway/gateway-register.controller';
+import { UploadProfilePhotoService } from './services/upload-profile-photo.service';
 
 @Module({
   imports: [
@@ -20,4 +20,4 @@ import { UploadProfilePhotoService } from './microservices/user-service/services
   controllers: [GatewayLoginController, GatewayRegisterController],
   providers: [UploadProfilePhotoService],
 })
-export class ApiGatewayModule {}
+export class UserGatewayModule {}

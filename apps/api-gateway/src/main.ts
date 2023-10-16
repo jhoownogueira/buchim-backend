@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { ApiGatewayModule } from './api-gateway.module';
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import { ApiGatewayModule } from './microservices/api-gateway.module';
 
 config({ path: resolve(__dirname, '../../../.env') });
 
