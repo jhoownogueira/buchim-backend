@@ -1,3 +1,5 @@
+import { ICreatePost } from '../dtos/post.dto';
+
 export abstract class IPostRepository {
-  abstract create(data: any): Promise<void>;
+  abstract createPost(data: ICreatePost): Promise<void>;
 }

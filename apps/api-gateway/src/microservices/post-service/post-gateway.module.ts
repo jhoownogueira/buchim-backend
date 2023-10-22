@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GatewayPostController } from './gateway/gateway-post.controller';
+import { UploadPostPhotoService } from './services/upload-post-photo.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { GatewayPostController } from './gateway/gateway-post.controller';
     ]),
   ],
   controllers: [GatewayPostController],
-  providers: [],
+  providers: [UploadPostPhotoService],
 })
 export class PostGatewayModule {}

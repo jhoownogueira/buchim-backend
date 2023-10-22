@@ -4,9 +4,19 @@ import {
   Body,
   HttpCode,
   HttpException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { UploadPostPhotoService } from '../services/upload-post-photo.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+interface ICreatePost {
+  restaurantID: string;
+  content: string;
+  imageURL: string;
+}
 
 @Controller('/post')
 export class GatewayPostController {
@@ -19,12 +29,19 @@ export class GatewayPostController {
   })
   private client: ClientProxy;
 
-  @Post('/sua-rota')
-  @HttpCode(200)
-  async MeuMetodo(@Body() data: any) {
-    console.log('Gateway: recebendo requisição na minha rota');
+  constructor(private uploadPostPhotoService: UploadPostPhotoService) {}
+
+  @Post('/create')
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(201)
+  async CreatePost(@Body() data: ICreatePost, @UploadedFile() file: any) {
+    console.log(file);
+    console.log(data);
+    console.log('Gateway: recebendo requisição de registro');
+    const imageUrl = await this.uploadPostPhotoService.uploadFile(file);
+    data.imageURL = imageUrl;
     const response = await firstValueFrom(
-      this.client.send('minha_mensagem', data),
+      this.client.send('create-post', data),
     );
     if (!response.success) {
       console.log(response);
