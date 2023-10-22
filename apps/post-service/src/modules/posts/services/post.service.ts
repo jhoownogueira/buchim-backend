@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { IPostRepository } from '../repositories/post.repository';
-import { ICreatePost } from '../dtos/post.dto';
+import { ICreatePost, ILikePost } from '../dtos/post.dto';
 
 @Injectable()
 export class PostService {
-  constructor(private userRepository: IPostRepository) {}
+  constructor(private postRepository: IPostRepository) {}
 
   async createPost(data: ICreatePost): Promise<void> {
-    await this.userRepository.createPost(data);
+    await this.postRepository.createPost(data);
+  }
+
+  async likePost(data: ILikePost): Promise<void> {
+    await this.postRepository.likePost(data);
   }
 }

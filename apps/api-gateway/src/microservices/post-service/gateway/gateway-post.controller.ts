@@ -17,6 +17,10 @@ interface ICreatePost {
   content: string;
   imageURL: string;
 }
+interface ILikePost {
+  userID: string;
+  postID: string;
+}
 
 @Controller('/post')
 export class GatewayPostController {
@@ -43,6 +47,19 @@ export class GatewayPostController {
     const response = await firstValueFrom(
       this.client.send('create-post', data),
     );
+    if (!response.success) {
+      console.log(response);
+      console.log('Erro capturado no gateway:', response.error);
+      throw new HttpException(response.error, response.statusCode);
+    }
+    return response.data;
+  }
+
+  @Post('/like')
+  @HttpCode(201)
+  async LikePost(@Body() data: ILikePost) {
+    console.log('Gateway: recebendo requisição de like');
+    const response = await firstValueFrom(this.client.send('like-post', data));
     if (!response.success) {
       console.log(response);
       console.log('Erro capturado no gateway:', response.error);

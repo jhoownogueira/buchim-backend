@@ -3,3 +3,8 @@ export type ICreatePost = {
   content: string;
   imageURL: string;
 };
+
+export type ILikePost = {
+  userID: string;
+  postID: string;
+};
