@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IPostRepository } from '../repositories/post.repository';
-import { ICreatePost, ILikePost } from '../dtos/post.dto';
+import { ICreatePost, IFollowRestaurant, ILikePost } from '../dtos/post.dto';
 
 @Injectable()
 export class PostService {
@@ -12,5 +12,13 @@ export class PostService {
 
   async likePost(data: ILikePost): Promise<void> {
     await this.postRepository.likePost(data);
+  }
+
+  async switchFollowRestaurant(data: IFollowRestaurant): Promise<void> {
+    await this.postRepository.switchFollowRestaurant(data);
+  }
+
+  async listPostsByUserFollowRestaurants(userID: string): Promise<any> {
+    return await this.postRepository.listPostsByUserFollowRestaurants(userID);
   }
 }

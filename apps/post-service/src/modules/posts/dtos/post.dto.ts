@@ -8,3 +8,8 @@ export type ILikePost = {
   userID: string;
   postID: string;
 };
+
+export type IFollowRestaurant = {
+  userID: string;
+  restaurantID: string;
+};

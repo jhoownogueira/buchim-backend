@@ -6,6 +6,8 @@ import {
   HttpException,
   UploadedFile,
   UseInterceptors,
+  Get,
+  Param,
 } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -20,6 +22,11 @@ interface ICreatePost {
 interface ILikePost {
   userID: string;
   postID: string;
+}
+
+interface IFollowRestaurant {
+  userID: string;
+  restaurantID: string;
 }
 
 @Controller('/post')
@@ -60,6 +67,36 @@ export class GatewayPostController {
   async LikePost(@Body() data: ILikePost) {
     console.log('Gateway: recebendo requisição de like');
     const response = await firstValueFrom(this.client.send('like-post', data));
+    if (!response.success) {
+      console.log(response);
+      console.log('Erro capturado no gateway:', response.error);
+      throw new HttpException(response.error, response.statusCode);
+    }
+    return response.data;
+  }
+
+  @Post('/follow')
+  @HttpCode(201)
+  async FollowRestaurant(@Body() data: IFollowRestaurant) {
+    console.log('Gateway: recebendo requisição de follow');
+    const response = await firstValueFrom(
+      this.client.send('follow-restaurant', data),
+    );
+    if (!response.success) {
+      console.log(response);
+      console.log('Erro capturado no gateway:', response.error);
+      throw new HttpException(response.error, response.statusCode);
+    }
+    return response.data;
+  }
+
+  @Get('/list/:userID')
+  @HttpCode(200)
+  async ListPostByUserFollowRestaurants(@Param('userID') userID: string) {
+    console.log('Gateway: recebendo requisição de follow');
+    const response = await firstValueFrom(
+      this.client.send('list-posts-by-user-follow-restaurants', userID),
+    );
     if (!response.success) {
       console.log(response);
       console.log('Erro capturado no gateway:', response.error);
