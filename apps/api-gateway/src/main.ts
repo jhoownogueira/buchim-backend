@@ -7,6 +7,7 @@ config({ path: resolve(__dirname, '../../../.env') });
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
-  await app.listen(3000);
+  app.enableCors();
+  await app.listen(1700);
 }
 bootstrap();

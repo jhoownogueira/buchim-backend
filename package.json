@@ -7,12 +7,17 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "build:apiGateway": "nest build api-gateway",
+    "build:userService": "nest build user-service",
+    "build:postService": "nest build post-service",
+    "build:all": "concurrently \"npm run build:userService\" \"npm run build:postService\" \"npm run build:apiGateway\"",
     "start": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:apiGateway": "nest start api-gateway --watch",
     "start:userService": "nest start user-service --watch",
     "start:postService": "nest start post-service --watch",
-    "start:all": "concurrently \"npm run start:userService\" \"npm run start:postService\" \"npm run start:apiGateway\""
+    "start:all": "concurrently \"npm run start:userService\" \"npm run start:postService\" \"npm run start:apiGateway\"",
+    "start:pm2": "pm2 start ecosystem.config.js"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.427.0",

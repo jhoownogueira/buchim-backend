@@ -19,7 +19,7 @@ export class GatewayLoginController {
     transport: Transport.TCP,
     options: {
       host: 'localhost',
-      port: 3001,
+      port: 1701,
     },
   })
   private client: ClientProxy;

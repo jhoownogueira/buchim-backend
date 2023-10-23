@@ -10,10 +10,10 @@ async function bootstrap() {
   const app = await NestFactory.create(UserServiceModule);
   app.connectMicroservice({
     transport: Transport.TCP,
-    options: { port: 3001 },
+    options: { port: 1701 },
   });
   await app.startAllMicroservices();
 
-  await app.listen(3001);
+  await app.listen(1701);
 }
 bootstrap();

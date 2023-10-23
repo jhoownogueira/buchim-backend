@@ -35,7 +35,7 @@ export class GatewayPostController {
     transport: Transport.TCP,
     options: {
       host: 'localhost',
-      port: 3002,
+      port: 1702,
     },
   })
   private client: ClientProxy;

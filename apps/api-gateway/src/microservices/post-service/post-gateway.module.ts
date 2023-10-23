@@ -11,7 +11,7 @@ import { UploadPostPhotoService } from './services/upload-post-photo.service';
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 3002,
+          port: 1702,
         },
       },
     ]),
