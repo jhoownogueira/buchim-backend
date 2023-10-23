@@ -84,4 +84,24 @@ export class PostController {
       };
     }
   }
+
+  @MessagePattern('list-all-restaurants')
+  async ListAllRestaurants() {
+    try {
+      const restaurants = await this.postService.listAllRestaurants();
+      return {
+        success: true,
+        data: restaurants,
+        message: 'Ok',
+        statusCode: 200,
+      };
+    } catch (error) {
+      console.log('Erro no microserviço:', error);
+      return {
+        success: false,
+        message: error.response ? error.response : error,
+        statusCode: error.status ? error.status : 500,
+      };
+    }
+  }
 }

@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IPostRepository } from '../repositories/post.repository';
-import { ICreatePost, IFollowRestaurant, ILikePost } from '../dtos/post.dto';
+import {
+  ICreatePost,
+  IFollowRestaurant,
+  ILikePost,
+  IRestaurantList,
+} from '../dtos/post.dto';
 
 @Injectable()
 export class PostService {
@@ -20,5 +25,9 @@ export class PostService {
 
   async listPostsByUserFollowRestaurants(userID: string): Promise<any> {
     return await this.postRepository.listPostsByUserFollowRestaurants(userID);
+  }
+
+  async listAllRestaurants(): Promise<IRestaurantList[]> {
+    return await this.postRepository.listAllRestaurants();
   }
 }

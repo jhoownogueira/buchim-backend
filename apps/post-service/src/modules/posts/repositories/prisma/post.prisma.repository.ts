@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { IPostRepository } from '../post.repository';
 import { PrismaService } from 'apps/post-service/src/infra/database/prisma.service';
-import { ICreatePost, IFollowRestaurant, ILikePost } from '../../dtos/post.dto';
+import {
+  ICreatePost,
+  IFollowRestaurant,
+  ILikePost,
+  IRestaurantList,
+} from '../../dtos/post.dto';
 
 @Injectable()
 export class PostPrismaRepository implements IPostRepository {
@@ -117,6 +122,33 @@ export class PostPrismaRepository implements IPostRepository {
             },
           };
         }),
+      };
+    });
+  }
+
+  async listAllRestaurants(): Promise<IRestaurantList[]> {
+    const allRestaurants = await this.prisma.restaurant.findMany({
+      include: {
+        Location: true,
+      },
+    });
+
+    return allRestaurants.map((restaurant) => {
+      return {
+        id: restaurant.RestaurantID,
+        username: restaurant.Username,
+        fullName: restaurant.FullName,
+        profileImageURL: restaurant.ProfileImageURL,
+        localization: {
+          latitude: restaurant.Location.Latitude,
+          longitude: restaurant.Location.Longitude,
+          street: restaurant.Location.Street,
+          number: restaurant.Location.Number,
+          city: restaurant.Location.City,
+          state: restaurant.Location.State,
+          country: restaurant.Location.Country,
+          zipCode: restaurant.Location.ZipCode,
+        },
       };
     });
   }

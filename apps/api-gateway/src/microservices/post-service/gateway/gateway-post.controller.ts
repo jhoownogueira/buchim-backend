@@ -93,9 +93,24 @@ export class GatewayPostController {
   @Get('/list/:userID')
   @HttpCode(200)
   async ListPostByUserFollowRestaurants(@Param('userID') userID: string) {
-    console.log('Gateway: recebendo requisição de follow');
+    console.log('Gateway: recebendo requisição de listagem de posts');
     const response = await firstValueFrom(
       this.client.send('list-posts-by-user-follow-restaurants', userID),
+    );
+    if (!response.success) {
+      console.log(response);
+      console.log('Erro capturado no gateway:', response.error);
+      throw new HttpException(response.error, response.statusCode);
+    }
+    return response.data;
+  }
+
+  @Get('/restaurants/list')
+  @HttpCode(200)
+  async ListAllRestaurants() {
+    console.log('Gateway: recebendo requisição de listagem de restaurantes');
+    const response = await firstValueFrom(
+      this.client.send('list-all-restaurants', ''),
     );
     if (!response.success) {
       console.log(response);
