@@ -126,19 +126,24 @@ export class PostPrismaRepository implements IPostRepository {
     });
   }
 
-  async listAllRestaurants(): Promise<IRestaurantList[]> {
+  async listAllRestaurants(userID: string): Promise<IRestaurantList[]> {
     const allRestaurants = await this.prisma.restaurant.findMany({
       include: {
         Location: true,
+        UserFollowsRestaurant: true,
       },
     });
 
     return allRestaurants.map((restaurant) => {
+      const followingMe = restaurant.UserFollowsRestaurant.some(
+        (follow) => follow.UserID === userID,
+      );
       return {
         id: restaurant.RestaurantID,
         username: restaurant.Username,
         fullName: restaurant.FullName,
         profileImageURL: restaurant.ProfileImageURL,
+        following_me: followingMe,
         localization: {
           latitude: restaurant.Location.Latitude,
           longitude: restaurant.Location.Longitude,

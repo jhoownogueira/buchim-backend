@@ -105,12 +105,12 @@ export class GatewayPostController {
     return response.data;
   }
 
-  @Get('/restaurants/list')
+  @Get('/restaurants/:userID')
   @HttpCode(200)
-  async ListAllRestaurants() {
+  async ListAllRestaurants(@Param('userID') userID: string) {
     console.log('Gateway: recebendo requisição de listagem de restaurantes');
     const response = await firstValueFrom(
-      this.client.send('list-all-restaurants', ''),
+      this.client.send('list-all-restaurants', userID),
     );
     if (!response.success) {
       console.log(response);

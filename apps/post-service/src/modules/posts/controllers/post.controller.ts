@@ -86,9 +86,9 @@ export class PostController {
   }
 
   @MessagePattern('list-all-restaurants')
-  async ListAllRestaurants() {
+  async ListAllRestaurants(userID: string) {
     try {
-      const restaurants = await this.postService.listAllRestaurants();
+      const restaurants = await this.postService.listAllRestaurants(userID);
       return {
         success: true,
         data: restaurants,

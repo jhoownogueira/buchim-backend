@@ -10,5 +10,5 @@ export abstract class IPostRepository {
   abstract likePost(data: ILikePost): Promise<void>;
   abstract switchFollowRestaurant(data: IFollowRestaurant): Promise<void>;
   abstract listPostsByUserFollowRestaurants(userID: string): Promise<any>;
-  abstract listAllRestaurants(): Promise<IRestaurantList[]>;
+  abstract listAllRestaurants(userID: string): Promise<IRestaurantList[]>;
 }

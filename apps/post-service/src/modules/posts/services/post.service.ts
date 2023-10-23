@@ -27,7 +27,7 @@ export class PostService {
     return await this.postRepository.listPostsByUserFollowRestaurants(userID);
   }
 
-  async listAllRestaurants(): Promise<IRestaurantList[]> {
-    return await this.postRepository.listAllRestaurants();
+  async listAllRestaurants(userID: string): Promise<IRestaurantList[]> {
+    return await this.postRepository.listAllRestaurants(userID);
   }
 }
