@@ -68,6 +68,13 @@ export class SignInService {
     return {
       access_token: token,
       refreshToken: refreshToken,
+      user: {
+        userID: user.UserID,
+        username: user.Username,
+        fullName: user.FullName,
+        email: user.Email,
+        profileImageURL: user.ProfileImageURL,
+      },
     };
   }
 
@@ -115,6 +122,13 @@ export class SignInService {
     return {
       access_token: token,
       refreshToken: refreshToken,
+      restaurant: {
+        restaurantID: restaurant.RestaurantID,
+        username: restaurant.Username,
+        fullName: restaurant.FullName,
+        email: restaurant.Email,
+        profileImageURL: restaurant.ProfileImageURL,
+      },
     };
   }
 }
