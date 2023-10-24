@@ -13,7 +13,6 @@ async function bootstrap() {
     options: { port: 1701 },
   });
   await app.startAllMicroservices();
-
-  await app.listen(1701);
+  // await app.listen(1701);
 }
 bootstrap();
