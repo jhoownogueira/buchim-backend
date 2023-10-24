@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GatewayPostController } from './gateway/gateway-post.controller';
 import { UploadPostPhotoService } from './services/upload-post-photo.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -15,6 +16,11 @@ import { UploadPostPhotoService } from './services/upload-post-photo.service';
         },
       },
     ]),
+    JwtModule.register({
+      global: true,
+      secret: process.env.SECRET_JWT,
+      signOptions: { expiresIn: '1hr' },
+    }),
   ],
   controllers: [GatewayPostController],
   providers: [UploadPostPhotoService],

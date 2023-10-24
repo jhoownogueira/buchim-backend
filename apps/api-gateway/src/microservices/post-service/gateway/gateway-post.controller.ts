@@ -8,11 +8,13 @@ import {
   UseInterceptors,
   Get,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { UploadPostPhotoService } from '../services/upload-post-photo.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '../infra/providers/auth-guard.provider';
 
 interface ICreatePost {
   restaurantID: string;
@@ -43,6 +45,7 @@ export class GatewayPostController {
   constructor(private uploadPostPhotoService: UploadPostPhotoService) {}
 
   @Post('/create')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @HttpCode(201)
   async CreatePost(@Body() data: ICreatePost, @UploadedFile() file: any) {
@@ -63,6 +66,7 @@ export class GatewayPostController {
   }
 
   @Post('/like')
+  @UseGuards(AuthGuard)
   @HttpCode(201)
   async LikePost(@Body() data: ILikePost) {
     console.log('Gateway: recebendo requisição de like');
@@ -76,6 +80,7 @@ export class GatewayPostController {
   }
 
   @Post('/follow')
+  @UseGuards(AuthGuard)
   @HttpCode(201)
   async FollowRestaurant(@Body() data: IFollowRestaurant) {
     console.log('Gateway: recebendo requisição de follow');
@@ -91,6 +96,7 @@ export class GatewayPostController {
   }
 
   @Get('/list/:userID')
+  @UseGuards(AuthGuard)
   @HttpCode(200)
   async ListPostByUserFollowRestaurants(@Param('userID') userID: string) {
     console.log('Gateway: recebendo requisição de listagem de posts');
@@ -106,6 +112,7 @@ export class GatewayPostController {
   }
 
   @Get('/restaurants/:userID')
+  @UseGuards(AuthGuard)
   @HttpCode(200)
   async ListAllRestaurants(@Param('userID') userID: string) {
     console.log('Gateway: recebendo requisição de listagem de restaurantes');
