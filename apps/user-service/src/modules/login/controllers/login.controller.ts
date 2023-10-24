@@ -1,4 +1,4 @@
-import { Controller, Body, Post, HttpCode } from '@nestjs/common';
+import { Controller, Body } from '@nestjs/common';
 import { SignInService } from '../services/sign-in.service';
 import { RefreshTokenService } from '../services/refresh-token.service';
 import { UserSignInDTO } from '../dtos/user.dto';
@@ -34,26 +34,70 @@ export class LoginController {
     }
   }
 
-  @Post('/restaurant')
-  @HttpCode(200)
+  @MessagePattern('restaurant_signin')
   async SignInRestaurante(@Body() signInDTO: RestaurantSignInDTO) {
-    const userTokens = await this.signInService.signInRestaurant(signInDTO);
-    return userTokens;
+    try {
+      console.log('Microserviço: recebendo requisição de login');
+      const userTokens = await this.signInService.signInRestaurant(signInDTO);
+      console.log('Microserviço: enviando resposta de login');
+      return {
+        success: true,
+        statusCode: 200,
+        data: userTokens,
+      };
+    } catch (error) {
+      console.log('Erro no microserviço:', error);
+      return {
+        success: false,
+        error: error.response.message,
+        statusCode: error.response.statusCode,
+      };
+    }
   }
 
-  @Post('/user/refresh')
-  @HttpCode(200)
+  @MessagePattern('user_refresh')
   async refreshUser(@Body() refreshTokenDTO: RefreshTokenDTO) {
-    return await this.refreshTokenService.executeUser(
-      refreshTokenDTO.refresh_token,
-    );
+    try {
+      console.log('Microserviço: recebendo requisição de refresh');
+      const newToken = await this.refreshTokenService.executeUser(
+        refreshTokenDTO.refresh_token,
+      );
+      console.log('Microserviço: enviando resposta de refresh');
+      return {
+        success: true,
+        statusCode: 200,
+        data: newToken,
+      };
+    } catch (error) {
+      console.log('Erro no microserviço:', error);
+      return {
+        success: false,
+        error: error.response.message,
+        statusCode: error.response.statusCode,
+      };
+    }
   }
 
-  @Post('/restaurant/refresh')
-  @HttpCode(200)
+  @MessagePattern('restaurant_refresh')
   async refreshRestaurant(@Body() refreshTokenDTO: RefreshTokenDTO) {
-    return await this.refreshTokenService.executeRestaurant(
-      refreshTokenDTO.refresh_token,
-    );
+    try {
+      console.log('Microserviço: recebendo requisição de refresh');
+      const newToken = await this.refreshTokenService.executeRestaurant(
+        refreshTokenDTO.refresh_token,
+      );
+      console.log('Microserviço: enviando resposta de refresh');
+      return {
+        success: true,
+        statusCode: 200,
+        data: newToken,
+      };
+    } catch (error) {
+      console.log('Erro no microserviço:', error);
+      return {
+        success: false,
+        error: error.response.message,
+        statusCode: error.response.statusCode,
+      };
+    }
   }
 }
