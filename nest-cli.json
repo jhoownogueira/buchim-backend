@@ -1,8 +1,59 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/buchim-microservices/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/buchim-microservices/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/buchim-microservices",
+  "projects": {
+    "buchim-microservices": {
+      "type": "application",
+      "root": "apps/buchim-microservices",
+      "entryFile": "main",
+      "sourceRoot": "apps/buchim-microservices/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/buchim-microservices/tsconfig.app.json"
+      }
+    },
+    "user-service": {
+      "type": "application",
+      "root": "apps/user-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/user-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-service/tsconfig.app.json"
+      }
+    },
+    "restaurant-service": {
+      "type": "application",
+      "root": "apps/restaurant-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/restaurant-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/restaurant-service/tsconfig.app.json"
+      }
+    },
+    "api-gateway": {
+      "type": "application",
+      "root": "apps/api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+      }
+    },
+    "post-service": {
+      "type": "application",
+      "root": "apps/post-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/post-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/post-service/tsconfig.app.json"
+      }
+    }
   }
 }
